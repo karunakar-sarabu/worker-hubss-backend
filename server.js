@@ -12,7 +12,7 @@ connectDB();
 
 const workerRoutes = require("./routes/workerRoutes");
 
-const employerRoutes = require("./routes/employerRoutes");
+const employerRoutes = require("./routes/EmployerRoutes");
 const authRoutes = require("./routes/authRoutes");
 const jobRoutes = require("./routes/jobRoutes");
 const applicationRoutes = require("./routes/applicationRoutes");
