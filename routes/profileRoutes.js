@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const Worker = require("../models/worker"0;
+const Worker = require("../models/worker");
 const Employer = require("../models/Employer");
 
 router.get("/:role/:phone", async (req, res) => {
