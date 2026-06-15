@@ -1,5 +1,5 @@
 const express = require("express");
-const Worker = require("../models/Worker");
+const Worker = require("../models/worker"0;
 const bcrypt = require("bcryptjs");
 const router = express.Router();
 
