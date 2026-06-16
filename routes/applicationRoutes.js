@@ -40,23 +40,6 @@ router.post("/", async (req, res) => {
     }
 });
 
-// router.get("/", async (req, res) => {
-//   try {
-
-//     const applications =
-//       await Application.find()
-//       .sort({ createdAt: -1 });
-
-//     res.status(200).json(applications);
-
-//   } catch (error) {
-
-//     res.status(500).json({
-//       message: error.message
-//     });
-
-//   }
-// });
 
 router.get("/", async (req, res) => {
     try {
@@ -78,13 +61,17 @@ router.get("/", async (req, res) => {
             const job =
                 await Job.findById(app.jobId);
 
+            if (!job) continue;
+
             result.push({
                 _id: app._id,
                 workerPhone: app.workerPhone,
-                jobTitle: job ? job.title : "Job Deleted",
+                jobTitle: job.title,
                 status: app.status
             });
         }
+
+
 
         res.status(200).json(result);
 
@@ -124,38 +111,41 @@ router.put("/:id", async (req, res) => {
 });
 
 router.get("/worker/:phone", async (req, res) => {
-  try {
+    try {
 
-    const Job = require("../models/Job");
+        const Job = require("../models/Job");
 
-    const applications =
-      await Application.find({
-        workerPhone: req.params.phone
-      });
+        const applications =
+            await Application.find({
+                workerPhone: req.params.phone
+            });
 
-    const result = [];
+        const result = [];
 
-    for (let app of applications) {
+        for (let app of applications) {
 
-      const job =
-        await Job.findById(app.jobId);
+            const job =
+                await Job.findById(app.jobId);
 
-      result.push({
-        _id: app._id,
-        jobTitle: job ? job.title : "Job Deleted",
-        status: app.status
-      });
+            if (!job) continue;
+
+            result.push({
+                _id: app._id,
+                jobTitle: job.title,
+                status: app.status
+            });
+        }
+        
+
+        res.status(200).json(result);
+
+    } catch (error) {
+
+        res.status(500).json({
+            message: error.message
+        });
+
     }
-
-    res.status(200).json(result);
-
-  } catch (error) {
-
-    res.status(500).json({
-      message: error.message
-    });
-
-  }
 });
 
 module.exports = router;
