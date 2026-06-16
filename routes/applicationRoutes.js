@@ -44,6 +44,8 @@ router.post("/", async (req, res) => {
 router.get("/", async (req, res) => {
     try {
 
+        const Worker = require("../models/Worker");
+
         const Application =
             require("../models/Application");
 
@@ -56,21 +58,41 @@ router.get("/", async (req, res) => {
 
         const result = [];
 
+        // for (let app of applications) {
+
+        //     const job =
+        //         await Job.findById(app.jobId);
+
+        //     if (!job) continue;
+
+        //     result.push({
+        //         _id: app._id,
+        //         workerPhone: app.workerPhone,
+        //         jobTitle: job.title,
+        //         status: app.status
+        //     });
+        // }
         for (let app of applications) {
 
-            const job =
-                await Job.findById(app.jobId);
+            const job = await Job.findById(app.jobId);
 
             if (!job) continue;
+
+            const worker = await Worker.findOne({
+                phone: app.workerPhone
+            });
 
             result.push({
                 _id: app._id,
                 workerPhone: app.workerPhone,
+                workerName: worker?.name || "Unknown",
+                skill: worker?.skill || "Not Added",
+                location: worker?.location || "Not Added",
+                experience: worker?.experience || 0,
                 jobTitle: job.title,
                 status: app.status
             });
         }
-
 
 
         res.status(200).json(result);
@@ -135,7 +157,7 @@ router.get("/worker/:phone", async (req, res) => {
                 status: app.status
             });
         }
-        
+
 
         res.status(200).json(result);
 
