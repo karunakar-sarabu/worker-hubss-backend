@@ -3,14 +3,56 @@ const Job = require("../models/Job");
 
 const router = express.Router();
 
+// router.get("/", async (req, res) => {
+//     try {
+
+//         const jobs = await Job.find().sort({
+//             createdAt: -1
+//         });
+
+//         res.status(200).json(jobs);
+
+//     } catch (error) {
+
+//         res.status(500).json({
+//             message: error.message
+//         });
+
+//     }
+// });
 router.get("/", async (req, res) => {
     try {
 
-        const jobs = await Job.find().sort({
-            createdAt: -1
-        });
+        const Employer =
+            require("../models/Employer");
 
-        res.status(200).json(jobs);
+        const jobs =
+            await Job.find().sort({
+                createdAt: -1
+            });
+
+        const result = [];
+
+        for (let job of jobs) {
+
+            const employer =
+                await Employer.findOne({
+                    phone: job.employerPhone
+                });
+
+            result.push({
+                ...job._doc,
+
+                employerRating:
+                    employer?.rating || 0,
+
+                employerTotalRatings:
+                    employer?.totalRatings || 0
+            });
+
+        }
+
+        res.status(200).json(result);
 
     } catch (error) {
 
@@ -18,6 +60,23 @@ router.get("/", async (req, res) => {
             message: error.message
         });
 
+    }
+});
+
+router.get("/count/:phone", async (req, res) => {
+    try {
+        const jobs = await Job.find({
+            employerPhone: req.params.phone,
+        });
+
+        res.json({
+            count: jobs.length,
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            message: error.message,
+        });
     }
 });
 
@@ -63,6 +122,7 @@ router.get("/employer/:phone", async (req, res) => {
         }).sort({
             createdAt: -1
         });
+
 
         res.status(200).json(jobs);
 

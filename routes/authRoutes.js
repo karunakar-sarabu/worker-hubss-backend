@@ -9,18 +9,20 @@ const jwt = require("jsonwebtoken");
 
 router.post("/login", async (req, res) => {
     try {
-
+        console.log("login route invoked")
         const { phone, password } = req.body;
 
         let user = await Worker.findOne({ phone });
         let role = "worker";
 
         if (!user) {
+            console.log("login failed")
             user = await Employer.findOne({ phone });
             role = "employer";
         }
 
         if (!user) {
+            console.log("login user not found")
             return res.status(400).json({
                 message: "User not found"
             });
@@ -44,20 +46,12 @@ router.post("/login", async (req, res) => {
         );
 
         if (!isMatch) {
+            console.log("invvalid credentials")
             return res.status(400).json({
                 message: "Invalid credentials"
             });
         }
 
-        // res.status(200).json({
-        //     message: "Login successful",
-        //     role
-        // });
-        // res.status(200).json({
-        //     message: "Login successful",
-        //     role,
-        //     token
-        // });
         res.status(200).json({
             message: "Login successful",
             role,

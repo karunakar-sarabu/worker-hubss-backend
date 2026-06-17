@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 
+const path = require("path");
+
 dotenv.config();
 
 const connectDB = require("./config/db");
@@ -17,16 +19,24 @@ const authRoutes = require("./routes/authRoutes");
 const jobRoutes = require("./routes/jobRoutes");
 const applicationRoutes = require("./routes/applicationRoutes");
 const profileRoutes =require("./routes/profileRoutes");
+const otpRoutes = require("./routes/otpRoutes");
 
 app.use(cors());
 app.use(express.json());
 
+app.use(
+    "/uploads",
+    express.static(
+        path.join(__dirname, "uploads")
+    )
+);
 app.use("/api/workers", workerRoutes);
 app.use("/api/employers", employerRoutes);
 app.use("/api", authRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use( "/api/applications",  applicationRoutes);
 app.use("/api/profile", profileRoutes);
+app.use("/api/otp", otpRoutes);
 
 app.get("/", (req, res) => {
     res.send("Daily Wage Connect API Running...");

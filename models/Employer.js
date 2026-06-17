@@ -22,6 +22,15 @@ const employerSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    rating: {
+      type: Number,
+      default: 0
+    },
+
+    totalRatings: {
+      type: Number,
+      default: 0
+    },
   },
   {
     timestamps: true,
