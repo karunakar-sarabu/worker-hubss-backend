@@ -39,4 +39,29 @@ router.post("/register", async (req, res) => {
   }
 });
 
+
+router.get("/:phone", async (req, res) => {
+  try {
+
+    const employer = await Employer.findOne({
+      phone: req.params.phone
+    });
+
+    if (!employer) {
+      return res.status(404).json({
+        message: "Employer not found"
+      });
+    }
+
+    res.status(200).json(employer);
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message
+    });
+
+  }
+});
+
 module.exports = router;
