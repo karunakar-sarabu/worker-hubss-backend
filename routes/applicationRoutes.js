@@ -101,7 +101,7 @@ router.get("/count/:phone", async (req, res) => {
 
     }
 });
-router.get("/", async (req, res) => {
+router.get("/employer-phone", async (req, res) => {
     try {
 
 
@@ -113,9 +113,17 @@ router.get("/", async (req, res) => {
         const Job =
             require("../models/Job");
 
-        const applications =
-            await Application.find()
-                .sort({ createdAt: -1 });
+        const employerPhone = req.params.employerPhone;
+
+        const jobs = await Job.find({
+            employerPhone: employerPhone
+        });
+
+        const jobIds = jobs.map(job => job._id);
+
+        const applications = await Application.find({
+            jobId: { $in: jobIds }
+        }).sort({ createdAt: -1 });
 
         const result = [];
 
