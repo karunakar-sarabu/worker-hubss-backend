@@ -101,7 +101,7 @@ router.get("/count/:phone", async (req, res) => {
 
     }
 });
-router.get("/:employerphone", async (req, res) => {
+router.get("/:employerPhone", async (req, res) => {
     try {
 
 
