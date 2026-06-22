@@ -27,6 +27,8 @@ const applicationRoutes = require("./routes/applicationRoutes");
 const profileRoutes =require("./routes/profileRoutes");
 const otpRoutes = require("./routes/otpRoutes");
 const aiRoutes = require("./routes/aiRoutes");
+const chatbotRoutes =
+    require("./routes/chatbotRoutes");
 
 app.use(cors());
 app.use(express.json());
@@ -45,6 +47,7 @@ app.use( "/api/applications",  applicationRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/otp", otpRoutes);
 app.use("/api/ai", aiRoutes);
+app.use( "/api/chatbot",chatbotRoutes);
 
 app.get("/", (req, res) => {
     res.send("Daily Wage Connect API Running...");
