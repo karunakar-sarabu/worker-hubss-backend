@@ -1,6 +1,12 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
+dotenv.config();
+
+const result = dotenv.config();
+
+console.log(result);
+console.log("KEY =", process.env.GEMINI_API_KEY);
 
 const path = require("path");
 
@@ -20,6 +26,7 @@ const jobRoutes = require("./routes/jobRoutes");
 const applicationRoutes = require("./routes/applicationRoutes");
 const profileRoutes =require("./routes/profileRoutes");
 const otpRoutes = require("./routes/otpRoutes");
+const aiRoutes = require("./routes/aiRoutes");
 
 app.use(cors());
 app.use(express.json());
@@ -37,6 +44,7 @@ app.use("/api/jobs", jobRoutes);
 app.use( "/api/applications",  applicationRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/otp", otpRoutes);
+app.use("/api/ai", aiRoutes);
 
 app.get("/", (req, res) => {
     res.send("Daily Wage Connect API Running...");

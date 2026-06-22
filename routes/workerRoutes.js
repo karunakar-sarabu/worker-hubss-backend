@@ -3,10 +3,18 @@ const Worker = require("../models/worker");
 const bcrypt = require("bcryptjs");
 const router = express.Router();
 
+router.get("/debug/:phone", async (req, res) => {
+  const worker = await Worker.findOne({
+    phone: req.params.phone,
+  });
+
+  res.json(worker);
+});
+
 router.post("/register", async (req, res) => {
   try {
-    const { name, phone, skill, location, wage, password } = req.body;
 
+    const { name, phone, skill, skills, location, wage, password } = req.body;
     const workerExists = await Worker.findOne({ phone });
 
     if (workerExists) {
@@ -21,11 +29,18 @@ router.post("/register", async (req, res) => {
     const worker = await Worker.create({
       name,
       phone,
-      skill,
+
+      // old field (for backward compatibility)
+      skill: skill || (skills && skills.length > 0 ? skills[0] : ""),
+
+      // new field
+      skills: skills || (skill ? [skill] : []),
+
       location,
       wage,
       password: hashedPassword
     });
+
     console.log("worker registered ok")
     res.status(201).json({
       message: "Worker registered successfully",

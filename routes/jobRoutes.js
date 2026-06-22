@@ -85,6 +85,7 @@ router.post("/", async (req, res) => {
 
         const {
             title,
+            skill,
             description,
             location,
             wage,
@@ -93,6 +94,7 @@ router.post("/", async (req, res) => {
 
         const job = await Job.create({
             title,
+            skill,
             description,
             location,
             wage,

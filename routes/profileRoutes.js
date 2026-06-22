@@ -6,6 +6,21 @@ const Employer = require("../models/Employer");
 const upload = require("../middleware/upload");
 const multer = require("multer");
 
+
+router.get("/debug/:phone", async (req, res) => {
+  try {
+    const worker = await Worker.findOne({
+      phone: req.params.phone,
+    });
+
+    res.json(worker);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+});
+
 router.get("/:role/:phone", async (req, res) => {
 
     try {

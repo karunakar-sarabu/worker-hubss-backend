@@ -1,12 +1,14 @@
 const express = require("express");
 const Application = require("../models/Application");
+const Worker = require("../models/worker");
+const Job = require("../models/Job");
 
 const router = express.Router();
 
 router.get("/worker-stats/:phone", async (req, res) => {
     try {
 
-        const Worker = require("../models/worker");
+        
 
         const worker =
             await Worker.findOne({
@@ -49,7 +51,51 @@ router.get("/worker-stats/:phone", async (req, res) => {
 router.post("/", async (req, res) => {
     try {
 
+        //  const  workerPhone, jobId  = req.body;
+
         const { workerPhone, jobId } = req.body;
+
+        const worker = await Worker.findOne({
+            phone: workerPhone
+        });
+
+        const job = await Job.findById(jobId);
+
+        if (!worker) {
+            return res.status(404).json({
+                message: "Worker not found"
+            });
+        }
+
+        if (!job) {
+            return res.status(404).json({
+                message: "Job not found"
+            });
+        }
+
+
+        const workerSkills =
+            worker.skills?.length > 0
+                ? worker.skills
+                : [worker.skill];
+
+        console.log("Worker Skills:", workerSkills);
+        console.log("Job Skill:", job.skill);                
+        if (!workerSkills.includes(job.skill)) {
+
+            return res.status(400).json({
+                message:
+                    "You can only apply for jobs matching your skills"
+            });
+
+        }
+
+
+
+
+
+
+
 
         const existingApplication =
             await Application.findOne({
@@ -105,13 +151,7 @@ router.get("/:employerPhone", async (req, res) => {
     try {
 
 
-        const Worker = require("../models/worker");
-
-        const Application =
-            require("../models/Application");
-
-        const Job =
-            require("../models/Job");
+       
 
         const employerPhone = req.params.employerPhone;
 
@@ -210,7 +250,7 @@ router.put("/:id", async (req, res) => {
 router.get("/worker/:phone", async (req, res) => {
     try {
 
-        const Job = require("../models/Job");
+        
 
         const applications =
             await Application.find({
@@ -250,7 +290,7 @@ router.get("/worker/:phone", async (req, res) => {
 router.get("/employer/count/:phone", async (req, res) => {
     try {
 
-        const Job = require("../models/Job");
+       
 
         const jobs = await Job.find({
             employerPhone: req.params.phone,
@@ -284,7 +324,7 @@ router.get("/employer/count/:phone", async (req, res) => {
 router.get("/employer-stats/:phone", async (req, res) => {
     try {
 
-        const Job = require("../models/Job");
+       
 
         const jobs = await Job.find({
             employerPhone: req.params.phone
@@ -375,8 +415,7 @@ router.put("/rate/:id", async (req, res) => {
             });
         }
 
-        const Worker =
-            require("../models/worker");
+       
 
         console.log("Application:", application);
         console.log("Worker Phone:", application.workerPhone);
@@ -447,11 +486,7 @@ router.put("/rate-employer/:id", async (req, res) => {
 
         }
 
-        const Job =
-            require("../models/Job");
-
-        const Employer =
-            require("../models/Employer");
+        
 
         const job =
             await Job.findById(application.jobId);

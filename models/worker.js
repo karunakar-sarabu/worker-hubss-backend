@@ -13,10 +13,15 @@ const workerSchema = new mongoose.Schema(
       unique: true,
     },
 
-    skill: {
-      type: String,
-      required: true,
-    },
+  skill: {
+  type: String,
+  default: "",
+},
+
+skills: {
+  type: [String],
+  default: [],
+},
 
     location: {
       type: String,
